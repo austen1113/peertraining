@@ -414,7 +414,7 @@
       <div class="card">
         <h1 class="hero-title">Adapted PE <span class="gradient">Ally Quest</span></h1>
         <p class="subtitle">
-          A quick scenario game for peer support volunteers who help adults with disabilities during an afternoon adaptive PE program.
+          A quick scenario game for peer support volunteers who help adults with disabilities during an afternoon adapted PE program.
           Practice how to promote choice, dignity, safety, inclusion, communication, and fun.
         </p>
         <div class="pill-row">
@@ -476,7 +476,7 @@
         Keep support person-centered. Start with respect, then offer choices, then fade help when the person can do more independently.
       </p>
       <p class="mini">
-        In adaptive PE, your goal is not to do the activity for someone. Your goal is to help them participate as fully, safely, and joyfully as possible.
+        In adapted PE, your goal is not to do the activity for someone. Your goal is to help them participate as fully, safely, and joyfully as possible.
       </p>
     </section>
 
@@ -537,7 +537,7 @@
       {
         tag: "Arrival",
         title: "A participant hangs back at check-in",
-        text: "Jordan arrives at adaptive PE and stays near the wall instead of joining the group. Jordan looks unsure and keeps glancing at the equipment table.",
+        text: "Jordan arrives at adapted PE and stays near the wall instead of joining the group. Jordan looks unsure and keeps glancing at the equipment table.",
         choices: [
           {
             text: "Walk over, greet Jordan respectfully, and offer two choices for getting started.",
@@ -823,7 +823,7 @@
             note: "You reinforce participation and success in an accessible way.",
             outcome: "great",
             points: 15,
-            tip: "Adaptive PE is about meaningful participation, not one perfect method.",
+            tip: "Adapted PE is about meaningful participation, not one perfect method.",
             badge: "inclusion"
           },
           {
@@ -924,7 +924,7 @@
       chosenSet: [],
       earnedBadges: new Set(),
       answered: false,
-      highScore: Number(localStorage.getItem("adaptivePEHighScore") || 0)
+      highScore: Number(localStorage.getItem("adaptedPEHighScore") || 0)
     };
 
     const els = {
@@ -962,160 +962,13 @@
     };
 
     function shuffle(array) {
-  const copy = [...array];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-function getLevel(points) {
-  if (points >= 120) return { name: "Gold Ally", pct: 100 };
-  if (points >= 90) return { name: "Skilled Supporter", pct: 75 };
-  if (points >= 55) return { name: "Growing Guide", pct: 50 };
-  return { name: "Rookie Ally", pct: 25 };
-}
-
-function getFeedbackHeading(outcome) {
-  if (outcome === "great") return "Great choice";
-  if (outcome === "mixed") return "Decent start";
-  return "Try a stronger support move";
-}
-
-function getOutcomeClass(outcome) {
-  if (outcome === "great") return "good";
-  if (outcome === "mixed") return "mixed";
-  return "tough";
-}
-
-function coachTakeaway(points, badges) {
-  if (points >= 120 && badges.length >= 4) {
-    return "Excellent work. You kept support respectful, flexible, and person-centered while still attending to safety and participation.";
-  }
-  if (points >= 85) {
-    return "Strong session. Keep building your habit of offering choice, fading prompts, and adapting activities instead of removing people from them.";
-  }
-  return "Your biggest growth area is slowing down and centering autonomy, dignity, and accessible participation before jumping to control or correction.";
-}
-
-function renderBadges() {
-  els.badgeList.innerHTML = "";
-  Object.entries(badgeDefs).forEach(([key, badge]) => {
-    const item = document.createElement("div");
-    item.className = `badge ${state.earnedBadges.has(key) ? "earned" : ""}`;
-    item.innerHTML = `
-      <div class="badge-icon">${badge.icon}</div>
-      <div class="badge-copy">
-        <h4>${badge.title}</h4>
-        <p>${badge.text}</p>
-      </div>
-    `;
-    els.badgeList.appendChild(item);
-  });
-}
-
-function updateDashboard() {
-  const level = getLevel(state.points);
-  els.pointsVal.textContent = state.points;
-  els.streakVal.textContent = state.streak;
-  els.roundVal.textContent = `${state.round} / 8`;
-  els.levelVal.textContent = level.name;
-  els.pointsBar.style.width = `${Math.min((state.points / 120) * 100, 100)}%`;
-  els.streakBar.style.width = `${Math.min((state.streak / 4) * 100, 100)}%`;
-  els.roundBar.style.width = `${(state.round / 8) * 100}%`;
-  els.levelBar.style.width = `${level.pct}%`;
-}
-
-function startGame() {
-  state.player = els.playerName.value.trim() || "Volunteer";
-  els.heroSection.classList.add("hidden");
-  els.pageFooter.classList.add("hidden");
-  state.points = 0;
-  state.streak = 0;
-  state.round = 0;
-  state.current = 0;
-  state.earnedBadges = new Set();
-  state.answered = false;
-  state.chosenSet = shuffle(scenarios).slice(0, 8);
-  els.dashboard.classList.remove("hidden");
-  els.coachGuide.classList.remove("hidden");
-  els.gameArea.classList.remove("hidden");
-  els.endScreen.classList.add("hidden");
-  renderBadges();
-  updateDashboard();
-  renderScenario();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function renderScenario() {
-  const item = state.chosenSet[state.current];
-  const shuffledChoices = shuffle(item.choices);
-
-  state.answered = false;
-  els.feedbackBox.className = "feedback";
-  els.feedbackBox.innerHTML = "";
-  els.scenarioTag.textContent = item.tag;
-  els.scenarioTitle.textContent = item.title;
-  els.scenarioText.textContent = item.text;
-  els.choiceList.innerHTML = "";
-
-  shuffledChoices.forEach((choice) => {
-    const btn = document.createElement("button");
-    btn.className = "choice";
-    btn.innerHTML = `${choice.text}<small>${choice.note}</small>`;
-    btn.addEventListener("click", () => chooseAnswer(choice));
-    els.choiceList.appendChild(btn);
-  });
-}
-
-function chooseAnswer(choice) {
-  if (state.answered) return;
-  state.answered = true;
-
-  const buttons = [...document.querySelectorAll(".choice")];
-  buttons.forEach(btn => btn.disabled = true);
-
-  let bonus = 0;
-  if (choice.outcome === "great") {
-    state.streak += 1;
-    if (state.streak > 1) bonus = 2 * Math.min(state.streak - 1, 3);
-  } else if (choice.outcome === "mixed") {
-    state.streak = 0;
-  } else {
-    state.streak = 0;
-  }
-
-  state.points += choice.points + bonus;
-  state.round += 1;
-  if (choice.badge) state.earnedBadges.add(choice.badge);
-
-  renderBadges();
-  updateDashboard();
-
-  const bonusText = bonus > 0 ? `<p><strong>Streak bonus:</strong> +${bonus} points</p>` : "";
-  const isLast = state.current >= state.chosenSet.length - 1;
-  els.feedbackBox.className = `feedback show ${getOutcomeClass(choice.outcome)}`;
-  els.feedbackBox.innerHTML = `
-    <h3>${getFeedbackHeading(choice.outcome)}</h3>
-    <p><strong>Points earned:</strong> +${choice.points + bonus}</p>
-    ${bonusText}
-    <p>${choice.note}</p>
-    <div class="coach-tip"><strong>Coach tip:</strong> ${choice.tip}</div>
-    <div style="margin-top: 14px;">
-      <button class="primary" id="nextBtn">${isLast ? "See Results" : "Next Scenario"}</button>
-    </div>
-  `;
-
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    if (isLast) {
-      endGame();
-    } else {
-      state.current += 1;
-      renderScenario();
+      const copy = [...array];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
     }
-  });
-}
 
     function getLevel(points) {
       if (points >= 120) return { name: "Gold Ally", pct: 100 };
@@ -1205,7 +1058,7 @@ function chooseAnswer(choice) {
       els.scenarioText.textContent = item.text;
       els.choiceList.innerHTML = "";
 
-      item.choices.forEach((choice, idx) => {
+      shuffle(item.choices).forEach((choice, idx) => {
         const btn = document.createElement("button");
         btn.className = "choice";
         btn.innerHTML = `${choice.text}<small>${choice.note}</small>`;
@@ -1268,14 +1121,14 @@ function chooseAnswer(choice) {
 
       if (state.points > state.highScore) {
         state.highScore = state.points;
-        localStorage.setItem("adaptivePEHighScore", String(state.highScore));
+        localStorage.setItem("adaptedPEHighScore", String(state.highScore));
       }
 
       els.gameArea.classList.add("hidden");
       els.coachGuide.classList.add("hidden");
       els.endScreen.classList.remove("hidden");
       els.endTitle.textContent = `${state.player}, you finished Ally Quest!`;
-      els.endSubtitle.textContent = `You practiced eight real-world support moments from an adaptive PE afternoon program.`;
+      els.endSubtitle.textContent = `You practiced eight real-world support moments from an adapted PE afternoon program.`;
       els.finalPoints.textContent = `${state.points} points`;
       els.finalLevel.textContent = level;
       els.finalBadges.textContent = earned.length ? earned.join(", ") : "No badges earned this round";
@@ -1286,7 +1139,7 @@ function chooseAnswer(choice) {
     els.startBtn.addEventListener("click", startGame);
     els.playAgainBtn.addEventListener("click", startGame);
     els.resetHighBtn.addEventListener("click", () => {
-      localStorage.removeItem("adaptivePEHighScore");
+      localStorage.removeItem("adaptedPEHighScore");
       state.highScore = 0;
       els.highScoreText.textContent = "High score: 0 points";
     });
