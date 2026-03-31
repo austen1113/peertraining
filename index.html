@@ -998,22 +998,28 @@
       }
       return "Your biggest growth area is slowing down and centering autonomy, dignity, and accessible participation before jumping to control or correction.";
     }
+function shuffleArray(array) {
+  return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
 
-    function renderBadges() {
-      els.badgeList.innerHTML = "";
-      Object.entries(badgeDefs).forEach(([key, badge]) => {
-        const item = document.createElement("div");
-        item.className = `badge ${state.earnedBadges.has(key) ? "earned" : ""}`;
-        item.innerHTML = `
-          <div class="badge-icon">${badge.icon}</div>
-          <div class="badge-copy">
-            <h4>${badge.title}</h4>
-            <p>${badge.text}</p>
-          </div>
-        `;
-        els.badgeList.appendChild(item);
-      });
-    }
+function renderBadges() {
+  els.badgeList.innerHTML = "";
+  Object.entries(badgeDefs).forEach(([key, badge]) => {
+    const item = document.createElement("div");
+    item.className = `badge ${state.earnedBadges.has(key) ? "earned" : ""}`;
+    item.innerHTML = `
+      <div class="badge-icon">${badge.icon}</div>
+      <div class="badge-copy">
+        <h4>${badge.title}</h4>
+        <p>${badge.text}</p>
+      </div>
+    `;
+    els.badgeList.appendChild(item);
+  });
+}
 
     function updateDashboard() {
       const level = getLevel(state.points);
