@@ -998,13 +998,23 @@
       }
       return "Your biggest growth area is slowing down and centering autonomy, dignity, and accessible participation before jumping to control or correction.";
     }
-function shuffleArray(array) {
-  return array
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ value }) => value);
-}
+function renderScenario(scenario) {
+  const container = document.getElementById("choices");
+  container.innerHTML = "";
 
+  // ✅ Shuffle choices HERE
+  const shuffledChoices = shuffleArray(scenario.choices);
+
+  shuffledChoices.forEach(choice => {
+    const button = document.createElement("button");
+    button.textContent = choice.text;
+
+    button.onclick = () => handleChoice(choice);
+
+    container.appendChild(button);
+  });
+}
+    
 function renderBadges() {
   els.badgeList.innerHTML = "";
   Object.entries(badgeDefs).forEach(([key, badge]) => {
