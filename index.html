@@ -962,59 +962,58 @@
     };
 
     function shuffle(array) {
-      const copy = [...array];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 
-    function getLevel(points) {
-      if (points >= 120) return { name: "Gold Ally", pct: 100 };
-      if (points >= 90) return { name: "Skilled Supporter", pct: 75 };
-      if (points >= 55) return { name: "Growing Guide", pct: 50 };
-      return { name: "Rookie Ally", pct: 25 };
-    }
+function getLevel(points) {
+  if (points >= 120) return { name: "Gold Ally", pct: 100 };
+  if (points >= 90) return { name: "Skilled Supporter", pct: 75 };
+  if (points >= 55) return { name: "Growing Guide", pct: 50 };
+  return { name: "Rookie Ally", pct: 25 };
+}
 
-    function getFeedbackHeading(outcome) {
-      if (outcome === "great") return "Great choice";
-      if (outcome === "mixed") return "Decent start";
-      return "Try a stronger support move";
-    }
+function getFeedbackHeading(outcome) {
+  if (outcome === "great") return "Great choice";
+  if (outcome === "mixed") return "Decent start";
+  return "Try a stronger support move";
+}
 
-    function getOutcomeClass(outcome) {
-      if (outcome === "great") return "good";
-      if (outcome === "mixed") return "mixed";
-      return "tough";
-    }
+function getOutcomeClass(outcome) {
+  if (outcome === "great") return "good";
+  if (outcome === "mixed") return "mixed";
+  return "tough";
+}
 
-    function coachTakeaway(points, badges) {
-      if (points >= 120 && badges.length >= 4) {
-        return "Excellent work. You kept support respectful, flexible, and person-centered while still attending to safety and participation.";
-      }
-      if (points >= 85) {
-        return "Strong session. Keep building your habit of offering choice, fading prompts, and adapting activities instead of removing people from them.";
-      }
-      return "Your biggest growth area is slowing down and centering autonomy, dignity, and accessible participation before jumping to control or correction.";
-    }
+function coachTakeaway(points, badges) {
+  if (points >= 120 && badges.length >= 4) {
+    return "Excellent work. You kept support respectful, flexible, and person-centered while still attending to safety and participation.";
+  }
+  if (points >= 85) {
+    return "Strong session. Keep building your habit of offering choice, fading prompts, and adapting activities instead of removing people from them.";
+  }
+  return "Your biggest growth area is slowing down and centering autonomy, dignity, and accessible participation before jumping to control or correction.";
+}
+
 function renderScenario(scenario) {
   const container = document.getElementById("choices");
   container.innerHTML = "";
 
-  // ✅ Shuffle choices HERE
-  const shuffledChoices = shuffleArray(scenario.choices);
+  // ✅ Shuffle choices correctly
+  const shuffledChoices = shuffle(scenario.choices);
 
   shuffledChoices.forEach(choice => {
     const button = document.createElement("button");
     button.textContent = choice.text;
-
     button.onclick = () => handleChoice(choice);
-
     container.appendChild(button);
   });
 }
-    
+
 function renderBadges() {
   els.badgeList.innerHTML = "";
   Object.entries(badgeDefs).forEach(([key, badge]) => {
@@ -1030,7 +1029,6 @@ function renderBadges() {
     els.badgeList.appendChild(item);
   });
 }
-
     function updateDashboard() {
       const level = getLevel(state.points);
       els.pointsVal.textContent = state.points;
